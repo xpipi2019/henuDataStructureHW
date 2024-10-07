@@ -5,6 +5,7 @@
 using namespace std;
 int HW1();
 int HW2();
+int HW3();
 
 int main()
 {
@@ -14,7 +15,7 @@ int main()
     {
         case 1:HW1();break;
         case 2:HW2();break;
-        //case 3:HW3();break;
+        case 3:HW3();break;
        // case 4:HW4();break;
     }
     return 0;
