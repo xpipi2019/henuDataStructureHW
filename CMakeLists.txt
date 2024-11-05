@@ -9,4 +9,5 @@ add_executable(henuDataStructureHW
         HW2.cpp
         HW3.cpp
         HW4.cpp
-        HW5.cpp)
+        HW5.cpp
+        HW6.cpp)
