@@ -3,21 +3,8 @@
 // 参考:https://blog.csdn.net/qq_40953393/article/details/78935522
 //
 #include <iostream>
+#include "myQueue.h"
 using namespace std;
-
-typedef int QElemType;
-
-// 定义链队列结点
-typedef struct QNode {
-    QElemType data;
-    struct QNode *next;
-} QNode, *QueuePtr;
-
-// 队列结构定义
-typedef struct LQueue {
-    QueuePtr front;
-    QueuePtr rear;
-} LQueue;
 
 // 初始化：构造一个空队列Q
 bool InitLQueue(LQueue &Q) {
