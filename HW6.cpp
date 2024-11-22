@@ -7,17 +7,19 @@
 #include <iomanip>
 using namespace std;
 
-#define MAXSIZE 12500  // 非零元个数的最大值
+#define MAXSIZE 12500
 typedef int ElemType;
 
 struct Triple {
-    int i, j;     // 行和列下标
-    ElemType e;   // 元素的值
+    int i, j;
+    ElemType e;
 };
 
 struct TSMatrix {
-    Triple data[MAXSIZE + 1];  // 压缩矩阵，data[0] 未使用
-    int mu, nu, tu;            // 行数、列数和非零元个数
+    // 压缩矩阵，data[0] 未使用
+    Triple data[MAXSIZE + 1];
+    // 行数 列数 非零元个数
+    int mu, nu, tu;
 };
 
 int CreateSMatrix(TSMatrix &M, int mu, int nu, int tu, Triple elements[], int count) {

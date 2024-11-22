@@ -5,6 +5,7 @@
 #include <iostream>
 #include <set>
 
+/*
 using namespace std;
 
 #define endl '\n'
@@ -109,3 +110,5 @@ int HW1() {
     
     return 0;
 }
+
+*/
