@@ -10,6 +10,8 @@ int HW4();
 int HW5();
 int HW6();
 int HW7();
+int HW8();
+int HW9();
 
 int main()
 {
@@ -24,6 +26,8 @@ int main()
         case 5:HW5();break;
         case 6:HW6();break;
         case 7:HW7();break;
+        case 8:HW8();break;
+        case 9:HW9();break;
         default: break;
     }
     return 0;

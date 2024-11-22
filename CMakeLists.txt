@@ -12,6 +12,11 @@ add_executable(henuDataStructureHW
         HW5.cpp
         HW6.cpp
         HW7.cpp
-        myStack.h
+        myStack_int.h
         myBiTree.h
-        myQueue.h)
+        myQueue_int.h
+        HW8_optional.cpp
+        HW9.cpp
+        myStack_BiTree.h
+        myQueue_BiTree.h
+)

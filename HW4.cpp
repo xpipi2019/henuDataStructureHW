@@ -4,84 +4,17 @@
 // 进制转化参考：https://blog.csdn.net/2301_79397030/article/details/134702374
 //
 #include <iostream>
-#include <cstdlib>
 #include <cmath>
 #include <string>
-#include "myStack.h"
+#include "myStack_int.h"
 
 using namespace std;
 
-/*
-bool InitStack(SqStack1 &S);
-bool DestroyStack(SqStack1 &S);
-void ClearStack(SqStack1 &S);
-bool StackEmpty(SqStack1 S);
-int StackLength(SqStack1 S);
-bool GetTop(SqStack1 S, SElementType &e);
-bool Push(SqStack1 &S, SElementType e);
-bool Pop(SqStack1 &S, SElementType &e);
-bool StackTraverse(SqStack1 S, bool (*visit)(SElementType &e));
-void StackConvert(SqStack1 S, int originBase, int targetBase);
- */
 string temp;
 string conversion(int number, int originBase, int targetBase);
 char ToHax(int index);
 
-bool InitStack(SqStack1 &S) {
-    S.base = (SElementType *)malloc(STACK_INIT_SIZE * sizeof(SElementType));
-    if (!S.base) return false;
-    S.top = S.base;
-    S.stack_size = STACK_INIT_SIZE;
-    return true;
-}//InitStack
-
-bool DestroyStack(SqStack1 &S) {
-    if (S.base) {
-        free(S.base);
-        S.top = nullptr;
-        S.base = nullptr;
-        S.stack_size = 0;
-        return true;
-    }
-    return false;
-}
-
-void ClearStack(SqStack1 &S) {
-    S.top = S.base;
-}
-
-bool StackEmpty(SqStack1 S) {
-    return S.top == S.base;
-}
-
-int StackLength(SqStack1 S) {
-    return S.top - S.base;
-}
-
-bool GetTop(SqStack1 S, SElementType &e) {
-    if (S.top == S.base) return false;
-    e = *(S.top - 1);
-    return true;
-}// GetTop
-
-bool Push(SqStack1 &S, SElementType e) {
-    if (StackLength(S) >= S.stack_size){
-        S.base = (SElementType * ) realloc(S.base, (S.stack_size + 1) * sizeof(SElementType));
-        if (!S.base) return false;
-        S.top = S.base + S.stack_size;
-        S.stack_size += STACK_INCREMENT;
-    }
-    *S.top++ = e;
-    return true;
-}// Push
-
-bool Pop(SqStack1 &S, SElementType &e) {
-    if (S.top == S.base) return false;
-    e = *(--S.top);
-    return true;
-}// Pop
-
-bool StackTraverse(SqStack1 S, bool (*visit)(SElementType &e)) {
+bool StackTraverse(SqStack S, bool (*visit)(SElementType &e)) {
     SElementType *p = S.base;
     while (p != S.top) {
         if (!visit(*p++)) return false;
@@ -94,7 +27,7 @@ bool visit(SElementType &e) {
     return true;
 }
 
-void StackConvert(SqStack1 S, int originBase, int targetBase) {
+void StackConvert(SqStack S, int originBase, int targetBase) {
     SElementType *p = S.base;
     while (p != S.top) {
         temp += (" " + conversion(*p++, originBase, targetBase));
@@ -130,7 +63,7 @@ char ToHax(int index) {
 }
 
 int HW4() {
-    SqStack1 stack;
+    SqStack stack;
     SElementType element;
     int choice;
     bool initialized = false;

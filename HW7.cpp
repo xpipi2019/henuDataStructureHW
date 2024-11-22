@@ -6,73 +6,14 @@
 #include <cstdlib>
 
 #include "myBiTree.h"
-#include "myQueue.h"
-#include "myStack.h"
+#include "myQueue_BiTree.h"
+#include "myStack_BiTree.h"
 
 using namespace std;
 
 #define endl '\n'
 
-// 自定义栈
-
-void InitStack(SqStack2& S) {
-    S.base = (SElemType*)malloc(STACK_INIT_SIZE * sizeof(SElemType));
-    if (!S.base) exit(-1);
-    S.top = S.base;
-    S.stack_size = STACK_INIT_SIZE;
-}
-
-void Push(SqStack2& S, SElemType e) {
-    if (S.top - S.base >= S.stack_size) {
-        // 栈还是动态更好
-        S.base = (SElemType*)realloc(S.base, (S.stack_size + STACK_INCREMENT) * sizeof(SElemType));
-        if (!S.base) exit(-1);
-        S.top = S.base + S.stack_size;
-        S.stack_size += STACK_INCREMENT;
-    }
-    *(S.top++) = e;
-}
-
-bool StackEmpty(SqStack2 S) {
-    return S.top == S.base;
-}
-
-SElemType Pop(SqStack2& S) {
-    if (S.base == NULL) return NULL;
-    return *(--S.top);
-}
-
 // 自定义队列
-
-void InitQueue(LinkQueue& Q) {
-    Q.front = (QueuePtr2)malloc(sizeof(QNode2));
-    Q.rear = Q.front;
-    if (!Q.front) exit(-1);
-    Q.front->next = nullptr;
-}
-
-void EnQueue(LinkQueue& Q, QElemType2 e) {
-    QueuePtr2 p = (QueuePtr2)malloc(sizeof(QNode2));
-    if (!p) exit(-1);
-    p->data = e;
-    p->next = nullptr;
-    Q.rear->next = p;
-    Q.rear = p;
-}
-
-QElemType2 DeQueue(LinkQueue& Q) {
-    if (Q.front == Q.rear) return NULL;
-    QueuePtr2 p = Q.front->next;
-    QElemType2 e = p->data;
-    Q.front->next = p->next;
-    if (Q.rear == p) Q.rear = Q.front;
-    free(p);
-    return e;
-}
-
-bool QueueEmpty(LinkQueue Q) {
-    return Q.front == Q.rear;
-}
 
 // 二叉树操作函数
 int CreateBiTree(BiTree& T) {
@@ -100,7 +41,7 @@ void PreOrderTraverse(BiTree T) {
 }
 
 void InOrderTraverseNonRecursive1(BiTree T) {
-    SqStack2 S;
+    SqStack S;
     InitStack(S);
     BiTree p = T;
     while (p || !StackEmpty(S)) {
@@ -117,7 +58,7 @@ void InOrderTraverseNonRecursive1(BiTree T) {
 }
 
 void InOrderTraverseNonRecursive2(BiTree T) {
-    SqStack2 S;
+    SqStack S;
     InitStack(S);
     BiTree p = T;
     while (p || !StackEmpty(S)) {
