@@ -13,8 +13,6 @@ using namespace std;
 
 #define endl '\n'
 
-// 自定义队列
-
 // 二叉树操作函数
 int CreateBiTree(BiTree& T) {
     char ch;
