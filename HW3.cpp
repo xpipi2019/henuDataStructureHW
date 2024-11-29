@@ -12,27 +12,24 @@ using namespace std;
 
 typedef int ElemType;
 
-// 单链表存储结构
-typedef struct Lnode {
+struct Lnode {
     ElemType data;
-    struct Lnode* next;
-} Lnode, *LinkList;
+    Lnode* next = nullptr;
+};
 
-LinkList L;
-Lnode *p, *s;
+using LinkList = Lnode*;
 
-// 初始化链表为空链表
-void initList(LinkList &L) {
+// 初始化链表为空
+void initList(LinkList& L) {
     L = (LinkList)malloc(sizeof(Lnode));
     L->next = nullptr;
 }
 
-// 销毁链表
-void destroyList(LinkList &L) {
-    if (L == nullptr) return;
-    Lnode *current = L->next;
-    while (current != nullptr) {
-        Lnode *nextNode = current->next;
+void destroyList(LinkList& L) {
+    if (!L) return;
+    Lnode* current = L->next;
+    while (current) {
+        Lnode* nextNode = current->next;
         free(current);
         current = nextNode;
     }
@@ -40,12 +37,11 @@ void destroyList(LinkList &L) {
     L = nullptr;
 }
 
-// 清空链表
-void clearList(LinkList &L) {
-    if (L == nullptr) return;
-    Lnode *current = L->next;
-    while (current != nullptr) {
-        Lnode *nextNode = current->next;
+void clearList(LinkList& L) {
+    if (!L) return;
+    Lnode* current = L->next;
+    while (current) {
+        Lnode* nextNode = current->next;
         free(current);
         current = nextNode;
     }
@@ -53,9 +49,9 @@ void clearList(LinkList &L) {
 }
 
 // 求链表长度
-int listLength(LinkList L) {
+int getLength(const LinkList L) {
     int length = 0;
-    p = L->next;
+    Lnode* p = L->next;
     while (p) {
         length++;
         p = p->next;
@@ -64,9 +60,9 @@ int listLength(LinkList L) {
 }
 
 // 获取指定位置元素
-bool getElem(LinkList L, int i, ElemType &e) {
+bool getElem(const LinkList L, int i, ElemType& e) {
     if (i < 1) return false;
-    p = L->next;
+    Lnode* p = L->next;
     int j = 1;
     while (p && j < i) {
         p = p->next;
@@ -78,19 +74,19 @@ bool getElem(LinkList L, int i, ElemType &e) {
 }
 
 // 查找元素的位置
-int locateElem(LinkList L, ElemType e) {
-    p = L->next;
-    int j = 1;
+int locateElem(const LinkList L, ElemType e) {
+    Lnode* p = L->next;
+    int pos = 1;
     while (p && p->data != e) {
         p = p->next;
-        j++;
+        pos++;
     }
-    return (p) ? j : 0;
+    return p ? pos : 0;
 }
 
-// 求输入元素的前驱
-bool getPriorElem(LinkList L, ElemType e, ElemType &pre) {
-    p = L->next;
+// 求前驱
+bool getPredecessor(const LinkList L, ElemType e, ElemType& pre) {
+    Lnode* p = L->next;
     if (!p || p->data == e) return false;
     while (p->next && p->next->data != e) {
         p = p->next;
@@ -100,9 +96,9 @@ bool getPriorElem(LinkList L, ElemType e, ElemType &pre) {
     return true;
 }
 
-// 求输入元素的后继
-bool getNextElem(LinkList L, ElemType e, ElemType &next) {
-    p = L->next;
+// 求后继
+bool getSuccessor(const LinkList L, ElemType e, ElemType& next) {
+    Lnode* p = L->next;
     while (p && p->data != e) {
         p = p->next;
     }
@@ -111,17 +107,17 @@ bool getNextElem(LinkList L, ElemType e, ElemType &next) {
     return true;
 }
 
-//在第i个位置插入元素
-bool listInsert(LinkList &L, int i, ElemType e) {
+// 在第i个位置插入元素
+bool insertElem(LinkList& L, int i, ElemType e) {
     if (i < 1) return false;
-    p = L;
+    Lnode* p = L;
     int j = 0;
     while (p && j < i - 1) {
         p = p->next;
         j++;
     }
     if (!p || j > i - 1) return false;
-    s = (Lnode *)malloc(sizeof(Lnode));
+    Lnode* s = (Lnode*)malloc(sizeof(Lnode));
     s->data = e;
     s->next = p->next;
     p->next = s;
@@ -129,26 +125,24 @@ bool listInsert(LinkList &L, int i, ElemType e) {
 }
 
 // 删除第i个元素
-bool listDelete(LinkList &L, int i, ElemType &e) {
-    if (i < 1 || i > listLength(L)) return false;
-    p = L;
+bool deleteElem(LinkList& L, int i, ElemType& e) {
+    if (i < 1 || i > getLength(L)) return false;
+    Lnode* p = L;
     int j = 0;
     while (p->next && j < i - 1) {
         p = p->next;
         j++;
     }
     if (!p->next || j > i - 1) return false;
-    Lnode *q = p->next;
+    Lnode* q = p->next;
     p->next = q->next;
     e = q->data;
     free(q);
     return true;
 }
 
-// 输出链表所有元素
-void printList(LinkList L) {
-    p = L->next;
-    if (!p) return;
+void printList(const LinkList L) {
+    Lnode* p = L->next;
     while (p) {
         cout << p->data << " ";
         p = p->next;
@@ -157,9 +151,9 @@ void printList(LinkList L) {
 }
 
 // 用头插法初始化链表
-void headInsert(LinkList &L, int n) {
+void headInsert(LinkList& L, int n) {
     for (int i = 0; i < n; i++) {
-        s = (Lnode *)malloc(sizeof(Lnode));
+        Lnode* s = (Lnode*)malloc(sizeof(Lnode));
         cin >> s->data;
         s->next = L->next;
         L->next = s;
@@ -167,108 +161,94 @@ void headInsert(LinkList &L, int n) {
 }
 
 // 链表逆序
-void reverseList(LinkList &L) {
-    if (L == nullptr || L->next == nullptr) return;
+void reverseList(LinkList& L) {
+    if (!L || !L->next) return;
     LinkList reversedHead = (LinkList)malloc(sizeof(Lnode));
     reversedHead->next = nullptr;
-    LinkList current = L->next;
-    while (current != nullptr) {
-        LinkList newNode = (Lnode *)malloc(sizeof(Lnode));
-        newNode->data = current->data;
-        newNode->next = reversedHead->next;
-        reversedHead->next = newNode;
-        current = current->next;
+    Lnode* current = L->next;
+    while (current) {
+        Lnode* nextNode = current->next;
+        current->next = reversedHead->next;
+        reversedHead->next = current;
+        current = nextNode;
     }
-    LinkList temp = L;
+    free(L);
     L = reversedHead;
-    free(temp);
 }
 
 // 链表排序
-void sortList(LinkList &L) {
+void sortList(LinkList& L) {
     if (!L->next || !L->next->next) return;
-    bool swapped;
-    Lnode *p1, *p2 = nullptr;
-    do {
-        swapped = false;
-        p1 = L->next;
-        while (p1->next != p2) {
-            if (p1->data > p1->next->data) {
-                swap(p1->data, p1->next->data);
-                swapped = true;
+    Lnode* p1 = L->next;
+    for (; p1->next; p1 = p1->next) {
+        for (Lnode* p2 = L->next; p2->next; p2 = p2->next) {
+            if (p2->data > p2->next->data) {
+                swap(p2->data, p2->next->data);
             }
-            p1 = p1->next;
         }
-        p2 = p1;
-    } while (swapped);
+    }
 }
 
-// 菜单
-void menu() {
-    cout << "1. 初始化或重置链表\n";
-    cout << "2. 销毁链表\n";
-    cout << "3. 清空链表\n";
-    cout << "4. 链表长度\n";
-    cout << "5. 指定位置的元素值\n";
-    cout << "6. 查找链表中某元素的位序\n";
-    cout << "7. 查找某元素的前驱\n";
-    cout << "8. 查找某元素的后继\n";
-    cout << "9. 在第i个位置插入元素\n";
-    cout << "10. 删除第i个元素\n";
-    cout << "11. 输出链表所有元素\n";
-    cout << "12. 头插法初始化链表\n";
-    cout << "13. 链表逆序存放\n";
-    cout << "14. 链表排序\n";
-    cout << "输入一个负数结束程序\n";
-}
-
-// 主函数
 int HW3() {
+    LinkList L = nullptr;
     int choice, pos, len;
     ElemType elem, e;
 
     do {
-        menu();
+        cout << "1. 初始化或重置链表" << endl;
+        cout << "2. 销毁链表" << endl;
+        cout << "3. 清空链表" << endl;
+        cout << "4. 链表长度" << endl;
+        cout << "5. 指定位置的元素值" << endl;
+        cout << "6. 链表已存在元素的位序" << endl;
+        cout << "7. 求输入元素的直接前驱" << endl;
+        cout << "8. 求输入元素的直接后继" << endl;
+        cout << "9. 在第i个位置插入一个元素" << endl;
+        cout << "10. 删除第i个元素" << endl;
+        cout << "11. 输出有的链表元素" << endl;
+        cout << "12. 初始化并用头插法输入元素" << endl;
+        cout << "13. 链表逆序" << endl;
+        cout << "14. 链表排序" << endl;
+        cout << "0. 退出" << endl;
         cout << "请选择操作：";
         cin >> choice;
 
-        if (choice < 0) {
-            break;
-        }
+        if (choice == 0) break;
 
         if(choice == 12){
             if(L == nullptr){
                 cout << "请输入元素个数：";
                 cin >> len;
+                initList(L);
+                cout << "请输入 " << len << " 个用空格隔开的元素：" << endl;
                 headInsert(L, len);
-                cout << "链表头插法初始化成功！\n";
+                cout << "链表头插法初始化成功！" << endl;
             }
             else{
-                cout << "链表已完成初始化，不可再使用头插法初始化！\n";
+                cout << "链表已完成初始化，不可再使用头插法初始化！" << endl;
             }
         }
 
-        if (choice > 1 && choice <= 14 && L == nullptr) {
-            cout << "链表未初始化，请先初始化链表！\n";
+        if (choice > 1 && choice <= 14 && !L) {
+            cout << "链表未初始化，请先初始化链表！" << endl;
             continue;
         }
 
         switch (choice) {
             case 1:
                 initList(L);
-                cout << "链表初始化成功！\n";
+                cout << "链表初始化成功！" << endl;
                 break;
             case 2:
                 destroyList(L);
-                cout << "链表销毁成功！\n";
+                cout << "链表销毁成功！" << endl;
                 break;
             case 3:
                 clearList(L);
-                cout << "链表清空成功！\n";
+                cout << "链表清空成功！" << endl;
                 break;
             case 4:
-                len = listLength(L);
-                cout << "链表长度为：" << len << endl;
+                cout << "链表长度为：" << getLength(L) << endl;
                 break;
             case 5:
                 cout << "请输入位置：";
@@ -276,48 +256,48 @@ int HW3() {
                 if (getElem(L, pos, e))
                     cout << "第 " << pos << " 个元素为：" << e << endl;
                 else
-                    cout << "位置无效！\n";
+                    cout << "位置无效！" << endl;
                 break;
             case 6:
                 cout << "请输入要查找的元素：";
                 cin >> elem;
                 pos = locateElem(L, elem);
                 if (pos)
-                    cout << elem << " 的位序为：" << pos << endl;
+                    cout << elem << " 的位置为：" << pos << endl;
                 else
-                    cout << "未找到该元素！\n";
+                    cout << "未找到该元素！" << endl;
                 break;
             case 7:
-                cout << "请输入要查找前驱的元素：";
+                cout << "请输入元素：";
                 cin >> elem;
-                if (getPriorElem(L, elem, e))
+                if (getPredecessor(L, elem, e))
                     cout << elem << " 的前驱为：" << e << endl;
                 else
-                    cout << "该元素没有前驱或不存在！\n";
+                    cout << "该元素无前驱！" << endl;
                 break;
             case 8:
-                cout << "请输入要查找后继的元素：";
+                cout << "请输入元素：";
                 cin >> elem;
-                if (getNextElem(L, elem, e))
+                if (getSuccessor(L, elem, e))
                     cout << elem << " 的后继为：" << e << endl;
                 else
-                    cout << "该元素没有后继或不存在！\n";
+                    cout << "该元素无后继！" << endl;
                 break;
             case 9:
                 cout << "请输入位置和元素：";
                 cin >> pos >> elem;
-                if (listInsert(L, pos, elem))
-                    cout << "元素插入成功！\n";
+                if (insertElem(L, pos, elem))
+                    cout << "元素插入成功！" << endl;
                 else
-                    cout << "插入失败，位置或元素可能不合法！\n";
+                    cout << "插入失败！" << endl;
                 break;
             case 10:
-                cout << "请输入要删除的元素位置：";
+                cout << "请输入删除位置：";
                 cin >> pos;
-                if (listDelete(L, pos, e))
-                    cout << "删除元素 " << e << " 成功！\n";
+                if (deleteElem(L, pos, e))
+                    cout << "删除元素 " << e << " 成功！" << endl;
                 else
-                    cout << "删除失败！\n";
+                    cout << "删除失败！" << endl;
                 break;
             case 11:
                 cout << "链表中的元素为：";
@@ -326,17 +306,17 @@ int HW3() {
             //case 12:
             case 13:
                 reverseList(L);
-                cout << "链表逆序存放成功！\n";
+                cout << "链表逆序成功！" << endl;
                 break;
             case 14:
                 sortList(L);
-                cout << "链表排序成功！\n";
+                cout << "链表排序成功！" << endl;
                 break;
             default:
-                cout << "无效操作，请重新输入！\n";
+                cout << "无效操作！" << endl;
                 break;
         }
-    } while (choice != 0);
+    } while (choice >= 0);
 
     destroyList(L);
     return 0;
