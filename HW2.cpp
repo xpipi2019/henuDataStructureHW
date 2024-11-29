@@ -243,13 +243,17 @@ int HW2() {
             case 8:
                 cout << "请输入元素值: ";
                 cin >> value;
-                if (getPredecessor(L, value, pos)) cout << "前驱是: " << pos << endl;
+                if(locateElem(L, value) == 0){
+                    cout << "未找到元素！" << endl;
+                }else if (getPredecessor(L, value, pos)) cout << "前驱是: " << pos << endl;
                 else cout << "无前驱！" << endl;
                 break;
             case 9:
                 cout << "请输入元素值: ";
                 cin >> value;
-                if (getSuccessor(L, value, pos)) cout << "后继是: " << pos << endl;
+                if(locateElem(L, value) == 0){
+                cout << "未找到元素！" << endl;
+                }else if (getSuccessor(L, value, pos)) cout << "后继是: " << pos << endl;
                 else cout << "无后继！" << endl;
                 break;
             case 10:
