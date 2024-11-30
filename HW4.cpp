@@ -12,25 +12,25 @@ using namespace std;
 
 string temp;
 string conversion(int number, int originBase, int targetBase);
-char ToHax(int index);
+char toHex(int index);
 
-bool StackTraverse(SqStack S, bool (*visit)(SElementType &e)) {
-    SElementType *p = S.base;
+bool stackTraverse(SqStack S, bool (*visit)(SElementType& e)) {
+    SElementType* p = S.base;
     while (p != S.top) {
         if (!visit(*p++)) return false;
     }
     return true;
 }
 
-bool visit(SElementType &e) {
+bool visit(SElementType& e) {
     cout << e << " ";
     return true;
 }
 
-void StackConvert(SqStack S, int originBase, int targetBase) {
-    SElementType *p = S.base;
+void stackConvert(SqStack S, int originBase, int targetBase) {
+    SElementType* p = S.base;
     while (p != S.top) {
-        temp += (" " + conversion(*p++, originBase, targetBase));
+        temp += " " + conversion(*p++, originBase, targetBase);
     }
 }
 
@@ -38,6 +38,7 @@ string conversion(int number, int originBase, int targetBase) {
     int decimal = 0;
     int power = 0;
 
+    // 原进制数转换为十进制
     while (number > 0) {
         decimal += (number % 10) * pow(originBase, power);
         number /= 10;
@@ -45,20 +46,22 @@ string conversion(int number, int originBase, int targetBase) {
     }
 
     string result;
+    // 十进制数转换为目标进制
     while (decimal > 0) {
         int remainder = decimal % targetBase;
         if (remainder >= 10) {
-            result = ToHax(remainder) + result;
+            result = toHex(remainder) + result;
         } else {
             result = to_string(remainder) + result;
         }
         decimal /= targetBase;
     }
 
-    return result;
+    return result.empty() ? "0" : result;
 }
 
-char ToHax(int index) {
+// 十六进制字符转换
+char toHex(int index) {
     return "0123456789ABCDEF"[index];
 }
 
@@ -69,18 +72,18 @@ int HW4() {
     bool initialized = false;
 
     while (true) {
-        cout << "\n请选择一个操作:\n";
-        cout << "1. 初始化栈\n";
-        cout << "2. 销毁栈\n";
-        cout << "3. 清空栈\n";
-        cout << "4. 判断栈是否为空\n";
-        cout << "5. 求栈长度\n";
-        cout << "6. 获取栈顶元素\n";
-        cout << "7. 插入一个元素\n";
-        cout << "8. 删除一个元素\n";
-        cout << "9. 输出所有元素\n";
-        cout << "10. 进制转换\n";
-        cout << "0. 退出\n";
+        cout << "1. 初始化栈" << endl;
+        cout << "2. 销毁栈" << endl;
+        cout << "3. 清空栈" << endl;
+        cout << "4. 判断栈是否为空" << endl;
+        cout << "5. 求栈长度" << endl;
+        cout << "6. 获取栈顶元素" << endl;
+        cout << "7. 插入一个元素" << endl;
+        cout << "8. 删除一个元素" << endl;
+        cout << "9. 输出所有元素" << endl;
+        cout << "10. 进制转换" << endl;
+        cout << "0. 退出" << endl;
+        cout << "请选择一个操作: ";
         cin >> choice;
 
         if (choice == 0) break;
@@ -151,7 +154,7 @@ int HW4() {
             case 9:
                 if (initialized && !StackEmpty(stack)) {
                     cout << "栈中元素为: ";
-                    StackTraverse(stack,visit);
+                    stackTraverse(stack, visit);
                     cout << endl;
                 } else {
                     cout << "栈未初始化或为空！" << endl;
@@ -164,9 +167,9 @@ int HW4() {
                     cin >> originBase;
                     cout << "请输入目标进制: ";
                     cin >> targetBase;
-                    StackConvert(stack, originBase, targetBase);
-                    cout << originBase << " 进制 --> " << targetBase << " 进制："<<endl;
-                    cout << temp;
+                    stackConvert(stack, originBase, targetBase);
+                    cout << originBase << " 进制 --> " << targetBase << " 进制：" << endl;
+                    cout << temp << endl;
                     temp.clear();
                 } else {
                     cout << "栈未初始化或为空！" << endl;

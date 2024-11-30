@@ -8,7 +8,6 @@
 typedef int QElemType;
 
 // 定义链队列结点
-typedef int QElemType;
 typedef struct QNode {
     QElemType data;
     struct QNode* next;

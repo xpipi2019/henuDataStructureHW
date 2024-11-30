@@ -15,14 +15,15 @@ struct Triple {
     ElemType e;
 };
 
+// 稀疏矩阵的压缩存储结构
 struct TSMatrix {
-    // 压缩矩阵，data[0] 未使用
     Triple data[MAXSIZE + 1];
-    // 行数 列数 非零元个数
-    int mu, nu, tu;
+    int mu, nu;
+    int tu;
 };
 
-int CreateSMatrix(TSMatrix &M, int mu, int nu, int tu, Triple elements[], int count) {
+// 创建稀疏矩阵
+int createSMatrix(TSMatrix& M, int mu, int nu, int tu, Triple elements[], int count) {
     if (tu > mu * nu) return 0;
     M.mu = mu;
     M.nu = nu;
@@ -34,12 +35,13 @@ int CreateSMatrix(TSMatrix &M, int mu, int nu, int tu, Triple elements[], int co
     return 1;
 }
 
-int DestroySMatrix(TSMatrix &M) {
+int destroySMatrix(TSMatrix& M) {
     M.mu = M.nu = M.tu = 0;
     return 1;
 }
 
-void PrintSMatrix(TSMatrix M) {
+// 打印稀疏矩阵
+void printSMatrix(const TSMatrix& M) {
     int index = 1;
     for (int i = 1; i <= M.mu; i++) {
         for (int j = 1; j <= M.nu; j++) {
@@ -54,7 +56,7 @@ void PrintSMatrix(TSMatrix M) {
     }
 }
 
-int TransposeSMatrix(TSMatrix M, TSMatrix &T) {
+int transposeSMatrix(const TSMatrix& M, TSMatrix& T) {
     int q = 1;
     T.mu = M.nu;
     T.nu = M.mu;
@@ -73,26 +75,31 @@ int TransposeSMatrix(TSMatrix M, TSMatrix &T) {
     return 1;
 }
 
-int FastTransposeSMatrix(TSMatrix M, TSMatrix &T) {
-    int num[MAXSIZE] = {0}, cpot[MAXSIZE] = {0};
+// 快速转置
+int fastTransposeSMatrix(const TSMatrix& M, TSMatrix& T) {
+    int num[MAXSIZE + 1] = {0};
+    int cpot[MAXSIZE + 1] = {0};
     T.mu = M.nu;
     T.nu = M.mu;
     T.tu = M.tu;
 
-    if (T.tu) {
+    if (T.tu > 0) {
         for (int t = 1; t <= M.tu; t++) {
             num[M.data[t].j]++;
         }
+
         cpot[1] = 1;
         for (int col = 2; col <= M.nu; col++) {
             cpot[col] = cpot[col - 1] + num[col - 1];
         }
+
+        // M.tu列优先
         for (int p = 1; p <= M.tu; p++) {
             int col = M.data[p].j;
-            int q = cpot[col];
-            T.data[q].i = M.data[p].j;
-            T.data[q].j = M.data[p].i;
-            T.data[q].e = M.data[p].e;
+            int pos = cpot[col];
+            T.data[pos].i = M.data[p].j;
+            T.data[pos].j = M.data[p].i;
+            T.data[pos].e = M.data[p].e;
             cpot[col]++;
         }
     }
@@ -104,7 +111,6 @@ int HW6() {
     int choice;
 
     while (true) {
-        cout << "-----压缩矩阵的转置运算-----" << endl;
         cout << "1. 创建矩阵" << endl;
         cout << "2. 销毁矩阵" << endl;
         cout << "3. 输出矩阵" << endl;
@@ -114,76 +120,84 @@ int HW6() {
         cout << "请选择操作：";
         cin >> choice;
 
-        if (choice == 1) {
-            int mu, nu, tu;
-            cout << "请输入矩阵的行数、列数和非零元个数：";
-            cin >> mu >> nu >> tu;
+        switch (choice) {
+            case 1: {
+                    int mu, nu, tu;
+                    cout << "请输入矩阵的行数、列数和非零元个数：";
+                    cin >> mu >> nu >> tu;
 
-            if (tu > mu * nu) {
-                cout << "输入错误，非零元素个数要小于等于行数乘列数，请重新输入。" << endl;
-                continue;
-            }
-
-            Triple elements[MAXSIZE];
-            int lastRow = 0, lastCol = 0;
-
-            for (int k = 0; k < tu; k++) {
-                int row, col, value;
-                cout << "请输入第 " << (k + 1) << " 个非零元素的位置和值：";
-                cin >> row >> col >> value;
-
-                // 检查是否重复下标
-                bool isDuplicate = false;
-                for (int m = 0; m < k; m++) {
-                    if (elements[m].i == row && elements[m].j == col) {
-                        isDuplicate = true;
-                        break;
+                    if (tu > mu * nu) {
+                        cout << "输入错误，非零元素个数要小于等于行数乘列数，请重新输入。" << endl;
+                        continue;
                     }
-                }
-                if (isDuplicate) {
-                    cout << "输入错误，输入的下标重复，请重新输入！" << endl;
-                    k--;
-                    continue;
-                }
 
-                // 检查是否递增
-                if (k > 0 && (row < lastRow || (row == lastRow && col <= lastCol))) {
-                    cout << "输入错误，下标输入时要递增输入，请重新输入！" << endl;
-                    k--;
-                    continue;
-                }
+                    Triple elements[MAXSIZE];
+                    int lastRow = 0, lastCol = 0;
 
-                elements[k] = {row, col, value};
-                lastRow = row;
-                lastCol = col;
+                    for (int k = 0; k < tu; k++) {
+                        int row, col, value;
+                        cout << "请输入第 " << (k + 1) << " 个非零元素的位置和值：";
+                        cin >> row >> col >> value;
+
+                        // 检查是否重复下标
+                        bool isDuplicate = false;
+                        for (int m = 0; m < k; m++) {
+                            if (elements[m].i == row && elements[m].j == col) {
+                                isDuplicate = true;
+                                break;
+                            }
+                        }
+                        if (isDuplicate) {
+                            cout << "输入错误，输入的下标重复，请重新输入！" << endl;
+                            k--;
+                            continue;
+                        }
+
+                        // 检查是否递增
+                        if (k > 0 && (row < lastRow || (row == lastRow && col <= lastCol))) {
+                            cout << "输入错误，下标输入时要递增输入，请重新输入！" << endl;
+                            k--;
+                            continue;
+                        }
+
+                        elements[k] = {row, col, value};
+                        lastRow = row;
+                        lastCol = col;
+                    }
+
+                    if (createSMatrix(M, mu, nu, tu, elements, tu)) {
+                        cout << "矩阵创建成功。" << endl;
+                    }
+                break;
             }
 
-            if (CreateSMatrix(M, mu, nu, tu, elements, tu)) {
-                cout << "矩阵创建成功。" << endl;
-            }
+            case 2:
+                destroySMatrix(M);
+                cout << "矩阵已销毁。" << endl;
+                break;
 
-        } else if (choice == 2) {
-            DestroySMatrix(M);
-            cout << "矩阵已销毁。" << endl;
+            case 3:
+                cout << "矩阵内容：" << endl;
+                printSMatrix(M);
+                break;
 
-        } else if (choice == 3) {
-            cout << "矩阵内容为：" << endl;
-            PrintSMatrix(M);
+            case 4:
+                transposeSMatrix(M, T);
+                cout << "转置后的矩阵：" << endl;
+                printSMatrix(T);
+                break;
 
-        } else if (choice == 4) {
-            TransposeSMatrix(M, T);
-            cout << "转置后的矩阵为：" << endl;
-            PrintSMatrix(T);
+            case 5:
+                fastTransposeSMatrix(M, T);
+                cout << "快速转置后的矩阵：" << endl;
+                printSMatrix(T);
+                break;
 
-        } else if (choice == 5) {
-            FastTransposeSMatrix(M, T);
-            cout << "快速转置后的矩阵为：" << endl;
-            PrintSMatrix(T);
+            case 0:
+                return 0;
 
-        } else {
-            break;
+            default:
+                cout << "无效选择，请重新输入！" << endl;
         }
     }
-
-    return 0;
 }
