@@ -30,15 +30,15 @@ int CreateBiTree(BiTree& T) {
     return 1;
 }
 
-void PreOrderTraverse(BiTree T) {
+void PreTraverse(BiTree T) {
     if (T) {
         cout << T->data << " ";
-        PreOrderTraverse(T->lchild);
-        PreOrderTraverse(T->rchild);
+        PreTraverse(T->lchild);
+        PreTraverse(T->rchild);
     }
 }
 
-void InOrderTraverseNonRecursive1(BiTree T) {
+void MiddleTraverseF1(BiTree T) {
     SqStack S;
     InitStack(S);
     BiTree p = T;
@@ -53,34 +53,42 @@ void InOrderTraverseNonRecursive1(BiTree T) {
             p = p->rchild;
         }
     }
+
+    free(S.base);
 }
 
-void InOrderTraverseNonRecursive2(BiTree T) {
+void MiddleTraverseF2(BiTree T) {
     SqStack S;
     InitStack(S);
-    BiTree p = T;
-    while (p || !StackEmpty(S)) {
-        if (p) {
-            Push(S, p);
-            p = p->lchild;
+    BiTree p;
+
+    Push(S, T);
+    // 根指针进栈
+    while (!StackEmpty(S)) {
+        while (GetTop(S, p) && p) {
+            Push(S, p->lchild);
         }
-        else {
+        p = Pop(S);
+
+        if (!StackEmpty(S)) {
             p = Pop(S);
             cout << p->data << " ";
-            p = p->rchild;
+            Push(S, p->rchild);
         }
     }
+
+    free(S.base);
 }
 
-void PostOrderTraverse(BiTree T) {
+void PostTraverse(BiTree T) {
     if (T) {
-        PostOrderTraverse(T->lchild);
-        PostOrderTraverse(T->rchild);
+        PostTraverse(T->lchild);
+        PostTraverse(T->rchild);
         cout << T->data << " ";
     }
 }
 
-void LevelOrderTraverse(BiTree T) {
+void LevelTraverse(BiTree T) {
     if (!T) return;
     LinkQueue Q;
     InitQueue(Q);
@@ -109,7 +117,7 @@ int HW7() {
     BiTree T = NULL;
     int choice;
     do {
-        cout << "\n1. 创建二叉树" << endl;
+        cout << "1. 创建二叉树" << endl;
         cout << "2. 先序遍历二叉树（递归）" << endl;
         cout << "3. 中序遍历二叉树（非递归1）" << endl;
         cout << "4. 中序遍历二叉树（非递归2）" << endl;
@@ -127,23 +135,23 @@ int HW7() {
                 break;
             case 2:
                 cout << "先序遍历结果: ";
-                PreOrderTraverse(T);
+                PreTraverse(T);
                 break;
             case 3:
                 cout << "中序遍历结果（非递归1）: ";
-                InOrderTraverseNonRecursive1(T);
+                MiddleTraverseF1(T);
                 break;
             case 4:
                 cout << "中序遍历结果（非递归2）: ";
-                InOrderTraverseNonRecursive2(T);
+                MiddleTraverseF2(T);
                 break;
             case 5:
                 cout << "后序遍历结果: ";
-                PostOrderTraverse(T);
+                PostTraverse(T);
                 break;
             case 6:
                 cout << "层序遍历结果: ";
-                LevelOrderTraverse(T);
+                LevelTraverse(T);
                 break;
             case 7:
                 cout << "二叉树深度为: " << TreeDepth(T) << endl;

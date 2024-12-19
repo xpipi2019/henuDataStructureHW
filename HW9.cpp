@@ -31,6 +31,7 @@ int CreateUDN(MyGraph& g);
 void printAdjMatrix(MyGraph g);
 void DFSTraverse(MyGraph g);
 void DFS(MyGraph g, VertexType v);
+// 顶点类型 VertesType
 VertexType NextAdjVex(MyGraph g, VertexType v);
 void BFS(MyGraph g);
 void printVex(VertexType v);
@@ -39,7 +40,7 @@ int LocateVex(MyGraph g, int v) {
     for (int i = 0; i < g.vexnum; i++) {
         if (g.vexs[i] == v) return i;
     }
-    return -1; // 未找到
+    return -1;
 }
 
 int CreateUDN(MyGraph& g) {
@@ -61,14 +62,14 @@ int CreateUDN(MyGraph& g) {
         int j = LocateVex(g, v2);
         if (i != -1 && j != -1) {
             g.arcs[i][j].adj = 1;
-            g.arcs[j][i].adj = 1; // 无向图对称
+            // 无向图对称
+            g.arcs[j][i].adj = 1;
         }
     }
-    return 1; // 构造成功
+    return 1;
 }
 
 void printAdjMatrix(MyGraph g) {
-    cout << "邻接矩阵:" << endl;
     for (int i = 0; i < g.vexnum; i++) {
         for (int j = 0; j < g.vexnum; j++) {
             cout << g.arcs[i][j].adj << " ";
@@ -79,7 +80,6 @@ void printAdjMatrix(MyGraph g) {
 
 void DFSTraverse(MyGraph g) {
     memset(visited, false, sizeof(visited));
-    cout << "深度优先遍历结果:" << endl;
     for (int i = 0; i < g.vexnum; i++) {
         if (!visited[i]) DFS(g, i);
     }
@@ -105,7 +105,6 @@ void BFS(MyGraph g) {
     memset(visited, false, sizeof(visited));
     LinkQueue Q;
     InitLinkQueue(Q);
-    cout << "广度优先遍历结果:" << endl;
     for (int i = 0; i < g.vexnum; i++) {
         if (!visited[i]) {
             visited[i] = true;
@@ -147,13 +146,19 @@ int HW9() {
                 CreateUDN(g);
                 break;
             case 2:
+                cout << "邻接矩阵:" << endl;
                 printAdjMatrix(g);
                 break;
             case 3:
+                cout << "深度优先遍历结果:" << endl;
                 DFSTraverse(g);
                 break;
             case 4:
+                cout << "广度优先遍历结果:" << endl;
                 BFS(g);
+                break;
+            default:
+                cout << "无效选择，请重新选择！"<< endl;
                 break;
         }
     } while (choice != 5);

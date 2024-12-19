@@ -47,5 +47,12 @@ inline SElemType Pop(SqStack& S) {
     return *(--S.top);
 }
 
+//获取栈顶
+inline bool GetTop(SqStack S, SElemType &e) {
+    if (S.top == S.base) return false;
+    e = *(S.top - 1);
+    return true;
+}
+
 
 #endif //MYSTACK_BITREE_H

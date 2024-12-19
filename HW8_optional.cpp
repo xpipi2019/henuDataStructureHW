@@ -10,6 +10,7 @@ using namespace std;
 
 const int MAX_CHAR = 27; // 26个字母 + 空格
 const int MAX_NODES = 2 * MAX_CHAR - 1;
+const int MAX_INPUT = 100;
 typedef char** HCode;
 
 // 默认情况
@@ -94,25 +95,39 @@ void displayHuffmanCode() {
     }
 }
 
-void encodeMessage() {
+void encode() {
     cout << "请输入要编码的字符串（以%结束）: ";
-    char ch;
-    while ((ch = getchar()) != '%') {
-        for (int i = 0; i < MAX_CHAR; ++i) {
-            if (ch == lee[i]) {
-                cout << HC[i];
+    char ch[MAX_INPUT];
+    cin.ignore();
+    cin.getline(ch, MAX_INPUT);
+
+    int len = strlen(ch);
+
+    for (int i = 0; i < len; ++i) {
+        // 转换小写字母
+        if (ch[i] >= 'A' && ch[i] <= 'Z') {
+            ch[i] = ch[i] + ('a' - 'A');
+        }
+
+        if (ch[i] == '%') break;
+        for (int j = 0; j < MAX_CHAR; ++j) {
+            if (ch[i] == lee[j]) {
+                cout << HC[j];
                 break;
             }
         }
     }
+
     cout << endl;
 }
 
-void decodeMessage() {
+
+void decode() {
     cout << "请输入要解码的二进制字符串: ";
     char input[1024];
     cin >> input;
     int len = strlen(input);
+    // root -> 根
     int root = MAX_NODES - 1;
     for (int i = 0; i < len; ++i) {
         if (input[i] == '0') {
@@ -163,10 +178,10 @@ int HW8() {
                 displayHuffmanCode();
                 break;
             case 5:
-                decodeMessage();
+                decode();
                 break;
             case 6:
-                encodeMessage();
+                encode();
                 break;
             case 7:
                 cout << "程序退出。" << endl;
